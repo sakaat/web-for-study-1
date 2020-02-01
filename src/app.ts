@@ -29,7 +29,12 @@ app.get("/", (req, res) => {
     }
 });
 
-app.get("/login", (_req, res) => res.render("./login.ejs"));
+app.get("/login", (req, res) => {
+    if (req.session.username) {
+        return res.redirect("/");
+    }
+    res.render("./login.ejs");
+});
 
 app.post("/login", async (req, res) => {
     const AWS = require("aws-sdk");
