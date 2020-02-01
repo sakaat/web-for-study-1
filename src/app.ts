@@ -62,4 +62,15 @@ app.post("/login", async (req, res) => {
     }
 });
 
+app.get("/register", async (req, res) => {
+    if (req.session.username) {
+        return res.redirect("/");
+    }
+    res.render("./register.ejs");
+});
+
+app.post("/register", (_req, res) => {
+    res.redirect("/");
+});
+
 module.exports = app;
