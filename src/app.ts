@@ -74,8 +74,13 @@ app.post("/register", (_req, res) => {
 });
 
 app.post("/slack", (req, res) => {
-    console.log(req);
-    res.redirect("/");
+    const payload = JSON.parse(req.body.payload);
+    console.log(payload);
+    if (payload.actions[0].value === "approve") {
+        res.send("APPROVED");
+    } else {
+        res.send("REJECTED");
+    }
 });
 
 module.exports = app;
