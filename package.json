@@ -6,7 +6,17 @@
     "scripts": {
         "eslint": "npx eslint src/*.ts src/**/*.ts",
         "nodemon": "nodemon -e ts",
-        "start": "tsc && node dist/index.js"
+        "start": "tsc && node dist/index.js",
+        "test": "npx jest --coverage"
+    },
+    "jest": {
+        "transform": {
+            ".*\\.(ts)$": "./node_modules/ts-jest"
+        },
+        "reporters": [
+            "default",
+            "jest-html-reporters"
+        ]
     },
     "repository": {
         "type": "git",
@@ -25,14 +35,20 @@
     },
     "devDependencies": {
         "@types/express": "^4.17.2",
+        "@types/jest": "^25.1.1",
         "@types/node": "^13.7.0",
         "@typescript-eslint/eslint-plugin": "^2.18.0",
         "@typescript-eslint/parser": "^2.18.0",
         "eslint": "^6.8.0",
         "eslint-config-prettier": "^6.10.0",
         "eslint-plugin-prettier": "^3.1.2",
+        "http-status-codes": "^1.4.0",
+        "jest": "^25.1.0",
+        "jest-html-reporters": "^1.2.1",
         "nodemon": "^2.0.2",
         "prettier": "^1.19.1",
+        "supertest": "^4.0.2",
+        "ts-jest": "^25.1.0",
         "ts-node": "^8.6.2",
         "typescript": "^3.7.5"
     }
