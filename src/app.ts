@@ -4,9 +4,30 @@ app.set("view engine", "ejs");
 
 app.use(express.urlencoded({ extended: true }));
 
+import session = require("express-session");
+
+app.use(
+    session({
+        secret: "secret",
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            httpOnly: true,
+            secure: false,
+            maxAge: 1000 * 60 * 30,
+        },
+    }),
+);
+
 import bcrypt = require("bcrypt");
 
-app.get("/", (_req, res) => res.send("Hello World!"));
+app.get("/", (req, res) => {
+    if (req.session.username) {
+        res.send("Hello World!");
+    } else {
+        res.redirect("/login");
+    }
+});
 
 app.get("/login", (_req, res) => res.render("./login.ejs"));
 
@@ -28,7 +49,8 @@ app.post("/login", async (req, res) => {
 
     if (bcrypt.compareSync(req.body.password, data.Item.password)) {
         console.log("成功");
-        res.render("./");
+        req.session.username = req.body.username;
+        res.redirect("/");
     } else {
         console.log("失敗");
         res.render("./login.ejs");

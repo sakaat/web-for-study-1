@@ -37,11 +37,14 @@
         "@types/node": "^13.7.0",
         "aws-sdk": "^2.610.0",
         "bcrypt": "^3.0.7",
+        "cookie-parser": "^1.4.4",
         "ejs": "^3.0.1",
         "express": "^4.17.1",
+        "express-session": "^1.17.0",
         "typescript": "^3.7.5"
     },
     "devDependencies": {
+        "@types/express-session": "^1.15.16",
         "@types/jest": "^25.1.1",
         "@typescript-eslint/eslint-plugin": "^2.18.0",
         "@typescript-eslint/parser": "^2.18.0",
