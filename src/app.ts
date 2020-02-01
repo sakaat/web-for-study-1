@@ -73,4 +73,9 @@ app.post("/register", (_req, res) => {
     res.redirect("/");
 });
 
+app.post("/slack", (req, res) => {
+    console.log(req);
+    res.redirect("/");
+});
+
 module.exports = app;
