@@ -3,10 +3,11 @@ import app = require("../src/app");
 import request = require("supertest");
 
 describe("app.js", () => {
-    it("ログイン画面に username, password の入力フォームが存在する", async () => {
-        const response = await request(app).get("/login");
+    it("登録画面に username, password の入力フォームが存在する", async () => {
+        const response = await request(app).get("/register");
         expect(response.statusCode).toBe(httpStatus.OK);
-        expect(response.text).toContain("username:");
+        expect(response.text).toContain("username1:");
         expect(response.text).toContain("password:");
+        expect(response.text).toContain("username2:");
     });
 });
