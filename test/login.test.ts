@@ -2,7 +2,7 @@ import httpStatus = require("http-status-codes");
 import app = require("../src/app");
 import request = require("supertest");
 
-describe("index.js", () => {
+describe("app.js", () => {
     it("ログイン画面に username, password の入力フォームが存在する", async () => {
         const response = await request(app).get("/login");
         expect(response.statusCode).toBe(httpStatus.OK);
