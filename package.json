@@ -43,7 +43,8 @@
         "express": "^4.17.1",
         "express-session": "^1.17.0",
         "request": "^2.88.0",
-        "typescript": "^3.7.5"
+        "typescript": "^3.7.5",
+        "uuid": "^3.4.0"
     },
     "devDependencies": {
         "@types/jest": "^25.1.1",

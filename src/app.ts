@@ -8,6 +8,8 @@ import session = require("express-session");
 
 import request = require("request");
 
+import uuidv1 = require("uuid/v1");
+
 app.use(
     session({
         secret: "secret",
@@ -54,9 +56,14 @@ app.post("/login", async (req, res) => {
     const data = await docClient.get(params).promise();
 
     if (bcrypt.compareSync(req.body.password, data.Item.password)) {
-        console.log("成功");
-        req.session.username = req.body.username;
-        res.redirect("/");
+        if (data.Item.flag === 0) {
+            console.log("成功");
+            req.session.username = req.body.username;
+            res.redirect("/");
+        }
+        if (data.Item.flag === 1) {
+            res.send("初回ログイン");
+        }
     } else {
         console.log("失敗");
         res.render("./login.ejs");
@@ -88,6 +95,23 @@ app.post("/register", async (req, res) => {
 
     if (data.Item.username === req.body.username1) {
         console.log("成功");
+
+        const params2 = {
+            TableName: "web-for-study-1-users",
+            Item: {
+                username: req.body.username1,
+                password: "dummy",
+                flag: 2,
+            },
+        };
+        await docClient.put(params2, (error) => {
+            if (error) {
+                throw new Error(
+                    `Failed to save data to DynamoDB. ${error.message}`,
+                );
+            }
+        });
+
         const payload = `payload=
             {
                 "text": "Slack Message Sample Text",
@@ -104,14 +128,14 @@ app.post("/register", async (req, res) => {
                                 "text": "APPROVE",
                                 "type": "button",
                                 "style": "default",
-                                "value": "approve"
+                                "value": "approve ${req.body.username1}"
                             },
                             {
                                 "name": "btn2Name",
                                 "text": "REJECT",
                                 "type": "button",
                                 "style": "default",
-                                "value": "reject"
+                                "value": "reject ${req.body.username1}"
                             }
                         ]
                     }
@@ -143,8 +167,36 @@ app.post("/register", async (req, res) => {
 app.post("/slack", (req, res) => {
     const payload = JSON.parse(req.body.payload);
     console.log(payload);
-    if (payload.actions[0].value === "approve") {
-        res.send("APPROVED");
+    if (payload.actions[0].value.slice(0, 7) === "approve") {
+        const AWS = require("aws-sdk");
+        const docClient = new AWS.DynamoDB.DocumentClient({
+            accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+            region: process.env.AWS_DEFAULT_REGION,
+        });
+
+        const saltRounds = 10;
+        const password = uuidv1().slice(0, 8);
+        const hash = bcrypt.hashSync(password, saltRounds);
+
+        const params = {
+            TableName: "web-for-study-1-users",
+            Key: {
+                username: payload.actions[0].value.slice(8),
+            },
+            UpdateExpression: "set password = :password, flag = :flag",
+            ExpressionAttributeValues: {
+                ":password": hash,
+                ":flag": 1,
+            },
+            ReturnValues: "ALL_NEW",
+        };
+        docClient.update(params, (error) => {
+            if (error) {
+                throw new Error(error);
+            }
+        });
+        res.send(`APPROVED - ${password}`);
     } else {
         res.send("REJECTED");
     }
