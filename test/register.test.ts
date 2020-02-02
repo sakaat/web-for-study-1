@@ -7,7 +7,7 @@ describe("app.js", () => {
         const response = await request(app).get("/register");
         expect(response.statusCode).toBe(httpStatus.OK);
         expect(response.text).toContain("username1:");
-        expect(response.text).toContain("password:");
+        expect(response.text).toContain("userid:");
         expect(response.text).toContain("username2:");
     });
 });

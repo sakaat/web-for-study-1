@@ -6,13 +6,6 @@ app.use(express.urlencoded({ extended: true }));
 
 import session = require("express-session");
 
-import AWS = require("aws-sdk");
-const docClient = new AWS.DynamoDB.DocumentClient({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    region: process.env.AWS_DEFAULT_REGION,
-});
-
 import request = require("request");
 
 app.use(
@@ -46,6 +39,12 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
+    const AWS = require("aws-sdk");
+    const docClient = new AWS.DynamoDB.DocumentClient({
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+        region: process.env.AWS_DEFAULT_REGION,
+    });
     const params = {
         TableName: "web-for-study-1-users",
         Key: {
@@ -72,6 +71,12 @@ app.get("/register", async (req, res) => {
 });
 
 app.post("/register", async (req, res) => {
+    const AWS = require("aws-sdk");
+    const docClient = new AWS.DynamoDB.DocumentClient({
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+        region: process.env.AWS_DEFAULT_REGION,
+    });
     const params = {
         TableName: "web-for-study-1-directory",
         Key: {
